@@ -1,0 +1,5 @@
+python-telegram-bot==13.13
+celery==5.2.7
+redis==4.3.4
+mypy==0.971
+flake8==5.0.4
