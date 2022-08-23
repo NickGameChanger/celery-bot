@@ -13,6 +13,7 @@ logging.basicConfig(
     level=logging.INFO
 )
 
+
 @tg_handler()
 async def remind(chat: Chat, update: Update, context: CallbackContext) -> None:
     error_text = '/remind 1 text // 1 - кол-во секунд через которое будет выслано напоминание, text - то что мам нужно напомнить'
@@ -37,6 +38,7 @@ async def start(chat: Chat, update: Update, context: CallbackContext) -> None:
             '/remind — выбери время и напиши, что тебе напомнить'
             )
     )
+
 
 @tg_handler()
 async def unknown(chat: Chat, update: Update, context: CallbackContext) -> None:
