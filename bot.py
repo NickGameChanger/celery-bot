@@ -1,43 +1,36 @@
 import logging
 
-from telegram import Update
+from telegram import Update, Chat
 from telegram.ext import (ApplicationBuilder, CallbackContext, CommandHandler,
                           MessageHandler, filters)
 
 import config
 from celery_worker import send_reminder
+from decorators import tg_handler
 
 logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
     level=logging.INFO
 )
 
-
-async def remind(update: Update, context: CallbackContext) -> None:
-    chat = update.effective_chat
-    if not chat:
-        raise ValueError('No chat in update')
-
+@tg_handler()
+async def remind(chat: Chat, update: Update, context: CallbackContext) -> None:
     error_text = '/remind 1 text // 1 - кол-во секунд через которое будет выслано напоминание, text - то что мам нужно напомнить'
     if not context.args or len(context.args) < 2:
         await context.bot.send_message(chat_id=chat.id, text=error_text)
         return
     try:
-        time = int(context.args[0])  # type: ignore
-        text = ' '.join(context.args[1:]) # type: ignore
+        time = int(context.args[0])
+        text = ' '.join(context.args[1:])
     except ValueError:
         await context.bot.send_message(chat_id=chat.id, text=error_text)
         return
 
     send_reminder.apply_async((text, chat.id), countdown=time)
 
-    await context.bot.send_message(chat_id=chat.id, text='cool')
 
-
-async def start(update: Update, context: CallbackContext) -> None:
-    chat = update.effective_chat
-    if not chat:
-        raise ValueError('No chat in update')
+@tg_handler()
+async def start(chat: Chat, update: Update, context: CallbackContext) -> None:
     await context.bot.send_message(
         chat_id=chat.id, text=(
             'Hello boi! here you can make reminder\n\n'
@@ -45,10 +38,8 @@ async def start(update: Update, context: CallbackContext) -> None:
             )
     )
 
-async def unknown(update: Update, context: CallbackContext) -> None:
-    chat = update.effective_chat
-    if not chat:
-        raise ValueError('No chat in update')
+@tg_handler()
+async def unknown(chat: Chat, update: Update, context: CallbackContext) -> None:
     await context.bot.send_message(chat_id=chat.id, text="Sorry, I didn't understand that command.")
 
 

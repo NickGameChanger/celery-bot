@@ -1,5 +1,6 @@
-from aiohttp import web
 import telegram
+from aiohttp import web
+
 import config
 
 
@@ -11,6 +12,7 @@ async def bot_api_app(argv: list[str] = None) -> web.Application:
         web.post('/api/send_reminder', tg_send_reminder),
     ])
     return app
+
 
 async def tg_send_reminder(request: web.Request) -> web.Response:
     try:
