@@ -1,9 +1,8 @@
 import logging
 
 from telegram import Update
-from telegram.ext import (ApplicationBuilder, CommandHandler,
-                          MessageHandler, filters, CallbackContext)
-
+from telegram.ext import (ApplicationBuilder, CallbackContext, CommandHandler,
+                          MessageHandler, filters)
 
 import config
 from celery_worker import send_reminder
@@ -35,7 +34,7 @@ async def remind(update: Update, context: CallbackContext) -> None:
     await context.bot.send_message(chat_id=chat.id, text='cool')
 
 
-async def start(update: Update, context: CallbackContext):
+async def start(update: Update, context: CallbackContext) -> None:
     chat = update.effective_chat
     if not chat:
         raise ValueError('No chat in update')
@@ -46,7 +45,7 @@ async def start(update: Update, context: CallbackContext):
             )
     )
 
-async def unknown(update: Update, context: CallbackContext):
+async def unknown(update: Update, context: CallbackContext) -> None:
     chat = update.effective_chat
     if not chat:
         raise ValueError('No chat in update')

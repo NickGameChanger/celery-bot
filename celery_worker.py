@@ -1,9 +1,7 @@
-import os
-from celery_app import app
-import telegram
-from telegram.ext import Defaults
-import config
 import requests
+
+import config
+from celery_app import app
 
 URL_REMINDER = f'{config.API_URL}/api/send_reminder'
 
